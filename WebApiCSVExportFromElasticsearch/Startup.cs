@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Owin;
 
@@ -13,9 +12,5 @@ namespace WebApiCSVExportFromElasticsearch
 		{
 			app.MapSignalR();
 		}
-	}
-
-	public class DiagnosisEventSourceService : Hub
-	{
 	}
 }
