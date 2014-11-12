@@ -15,3 +15,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.baseStyles {
+    border: medium none;
+    height: 70px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
