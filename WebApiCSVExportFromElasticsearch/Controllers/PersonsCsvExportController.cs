@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Http;
 using ElasticsearchCRUD;
 using ElasticsearchCRUD.ContextSearch;
+using ElasticsearchCRUD.Model;
 using Microsoft.AspNet.SignalR;
 using WebApiCSVExportFromElasticsearch.Models;
 
