@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http;
@@ -36,18 +37,18 @@ namespace WebApiCSVExportFromElasticsearch.Controllers
 				var scanScrollConfig = new ScanAndScrollConfiguration(1, TimeUnits.Second, 300);
 				var scrollIdResult = context.SearchCreateScanAndScroll<Person>(BuildSearchMatchAll(), scanScrollConfig);
 				
-				var scrollId = scrollIdResult.ScrollId;
-				_hubContext.Clients.All.addDiagnosisMessage(string.Format("Total Hits: {0}", scrollIdResult.TotalHits));
+				var scrollId = scrollIdResult.PayloadResult.ScrollId;
+				_hubContext.Clients.All.addDiagnosisMessage(string.Format("Total Hits: {0}", scrollIdResult.PayloadResult.Hits.Total));
 
 				int processedResults = 0;
-				while (scrollIdResult.TotalHits > processedResults)
+				while (scrollIdResult.PayloadResult.Hits.Total > processedResults)
 				{
 					var resultCollection = context.Search<Person>("", scrollId, scanScrollConfig);
-					scrollId = resultCollection.ScrollId;
+					scrollId = resultCollection.PayloadResult.ScrollId;
 
-					result.AddRange(resultCollection.PayloadResult);
+					result.AddRange(resultCollection.PayloadResult.Hits.HitsResult.Select(t => t.Source));
 					processedResults = result.Count;
-					_hubContext.Clients.All.addDiagnosisMessage(string.Format("Total Hits: {0}, Processed: {1}", scrollIdResult.TotalHits, processedResults));
+					_hubContext.Clients.All.addDiagnosisMessage(string.Format("Total Hits: {0}, Processed: {1}", scrollIdResult.PayloadResult.Hits.Total, processedResults));
 				}
 			}
 
