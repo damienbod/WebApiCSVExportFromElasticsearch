@@ -43,7 +43,7 @@ namespace WebApiCSVExportFromElasticsearch.Controllers
 				int processedResults = 0;
 				while (scrollIdResult.PayloadResult.Hits.Total > processedResults)
 				{
-					var resultCollection = context.Search<Person>("", scrollId, scanScrollConfig);
+					var resultCollection = context.SearchScanAndScroll<Person>(scrollId, scanScrollConfig);
 					scrollId = resultCollection.PayloadResult.ScrollId;
 
 					result.AddRange(resultCollection.PayloadResult.Hits.HitsResult.Select(t => t.Source));
