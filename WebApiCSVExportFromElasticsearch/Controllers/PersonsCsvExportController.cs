@@ -7,6 +7,9 @@ using System.Web.Http;
 using ElasticsearchCRUD;
 using ElasticsearchCRUD.ContextSearch;
 using ElasticsearchCRUD.Model;
+using ElasticsearchCRUD.Model.SearchModel;
+using ElasticsearchCRUD.Model.SearchModel.Queries;
+using ElasticsearchCRUD.Model.Units;
 using Microsoft.AspNet.SignalR;
 using WebApiCSVExportFromElasticsearch.Models;
 
@@ -34,7 +37,7 @@ namespace WebApiCSVExportFromElasticsearch.Controllers
 			{
 				context.TraceProvider = new SignalRTraceProvider(_hubContext, TraceEventType.Information);
 
-				var scanScrollConfig = new ScanAndScrollConfiguration(1, TimeUnits.Second, 300);
+				var scanScrollConfig = new ScanAndScrollConfiguration(new TimeUnitSecond(1), 300);
 				var scrollIdResult = context.SearchCreateScanAndScroll<Person>(BuildSearchMatchAll(), scanScrollConfig);
 				
 				var scrollId = scrollIdResult.PayloadResult.ScrollId;
@@ -56,21 +59,18 @@ namespace WebApiCSVExportFromElasticsearch.Controllers
 			return Ok(result);
 		}
 
-			//{
+		//{
 		//	"query" : {
 		//		"match_all" : {}
 		//	}
 		//}
-		private string BuildSearchMatchAll()
+		private Search BuildSearchMatchAll()
 		{
-			var buildJson = new StringBuilder();
-			buildJson.AppendLine("{");
-			buildJson.AppendLine("\"query\": {");
-			buildJson.AppendLine("\"match_all\" : {}");
-			buildJson.AppendLine("}");
-			buildJson.AppendLine("}");
+			return new Search()
+			{
+				Query = new Query(new MatchAllQuery())
+			};
 
-			return buildJson.ToString();
 		}
     }
 }
